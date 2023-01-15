@@ -106,4 +106,6 @@ return require("packer").startup(function(use)
 		end,
 	})
 	use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
+	use({ "tpope/vim-sleuth" })
+	use({ "simrat39/rust-tools.nvim" })
 end)
