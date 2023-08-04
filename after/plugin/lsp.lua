@@ -41,6 +41,7 @@ lsp.setup_nvim_cmp({
 		{ name = "path" },
 		{ name = "nvim_lsp", keyword_length = 1 },
 		{ name = "buffer", keyword_length = 5 },
+		{ name = "copilot", group_index = 2 },
 		{ name = "luasnip", keyword_length = 2 },
 	},
 	mapping = cmp_mappings,

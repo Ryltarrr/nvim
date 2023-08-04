@@ -1,4 +1,4 @@
-local prettier = require("formatter.defaults.prettier")
+local prettierd = require("formatter.defaults.prettierd")
 local api = vim.api
 
 -- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
@@ -17,25 +17,25 @@ require("formatter").setup({
 			require("formatter.filetypes.lua").stylua,
 		},
 		typescript = {
-			prettier,
+			prettierd,
 		},
 		json = {
-			prettier,
+			prettierd,
 		},
 		javascript = {
-			prettier,
+			prettierd,
 		},
 		typescriptreact = {
-			prettier,
+			prettierd,
 		},
 		javascriptreact = {
-			prettier,
+			prettierd,
 		},
 		svelte = {
-			prettier,
+			prettierd,
 		},
 		prisma = {
-			prettier,
+			prettierd,
 		},
 		go = {
 			require("formatter.filetypes.go").gofumpt,
