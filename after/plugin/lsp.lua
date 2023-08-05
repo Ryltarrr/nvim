@@ -10,10 +10,10 @@ local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 local cmp_mappings = lsp.defaults.cmp_mappings({
+	["<CR>"] = cmp.mapping.confirm({ select = false }),
 	["<C-space>"] = cmp.mapping(function(fallback)
 		if cmp.visible() then
 			cmp.close()
-			fallback()
 		else
 			cmp.complete()
 		end
