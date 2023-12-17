@@ -17,8 +17,16 @@ require("lazy").setup({
 		lazy = false,
 		priority = 1000,
 		name = "catppuccin",
+		-- config = function()
+		-- 	vim.cmd("colorscheme catppuccin-macchiato")
+		-- end,
+	},
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
 		config = function()
-			vim.cmd("colorscheme catppuccin-macchiato")
+			vim.cmd("colorscheme tokyonight-moon")
 		end,
 	},
 	{
@@ -36,7 +44,7 @@ require("lazy").setup({
 			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "find files" },
 			{ "<C-p>", "<cmd>Telescope git_files", desc = "git files" },
 			{ "<leader>ft", "<cmd>Telescope live_grep<cr>", desc = "live grep" },
-			{ "<leader>ft", "<cmd>Telescope live_grep<cr>", desc = "live grep", mode = "v" },
+			{ "<leader>ft", "<cmd>Telescope grep_string<cr>", desc = "grep selection", mode = "v" },
 			{ "<leader>fd", "<cmd>Telescope diagnostics<cr>", desc = "diagnostics" },
 			{ "<leader>fk", "<cmd>Telescope keymaps<cr>", desc = "keymaps" },
 			{ "<leader>fp", "<cmd>Telescope resume<cr>", desc = "previous" },
@@ -50,14 +58,39 @@ require("lazy").setup({
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-	},
-	{
-		"j-hui/fidget.nvim",
-		tag = "legacy",
+		-- lazy = false,
 		config = function()
-			require("fidget").setup({})
+			local configs = require("nvim-treesitter.configs")
+
+			configs.setup({
+				ensure_installed = {
+					"javascript",
+					"typescript",
+					"tsx",
+					"go",
+					"rust",
+					"lua",
+					"vue",
+					"css",
+					"json",
+					"prisma",
+					-- "templ",
+				},
+				sync_install = false,
+				highlight = { enable = true },
+				indent = { enable = true },
+				incremental_selection = {
+					enable = false,
+					keymaps = {
+						init_selection = "gnn",
+						node_incremental = "grn",
+						scope_incremental = "grc",
+						node_decremental = "grm",
+					},
+				},
+			})
 		end,
+		build = ":TSUpdate",
 	},
 	{
 		"windwp/nvim-autopairs",
@@ -71,55 +104,35 @@ require("lazy").setup({
 			require("nvim-ts-autotag").setup({})
 		end,
 	},
+	-- LSP related stuff
+	{
+		"williamboman/mason.nvim",
+		config = function()
+			require("mason").setup()
+		end,
+	},
+	{ "williamboman/mason-lspconfig.nvim" },
+	{ "VonHeikemen/lsp-zero.nvim", branch = "v3.x" },
+	{ "neovim/nvim-lspconfig" },
+	{ "hrsh7th/cmp-nvim-lsp" },
+	{ "hrsh7th/nvim-cmp" },
+	{ "L3MON4D3/LuaSnip" },
+	{ "hrsh7th/cmp-buffer" },
+	{ "hrsh7th/cmp-path" },
+	{ "hrsh7th/cmp-cmdline" },
+	{ "hrsh7th/nvim-cmp" },
 	{
 		"lewis6991/gitsigns.nvim",
+		-- event = "LazyFile",
 		config = function()
 			require("gitsigns").setup()
 		end,
 	},
 	{
-		"zbirenbaum/copilot.lua",
-		lazy = true,
-		cmd = "Copilot",
-		event = "InsertEnter",
-		config = function()
-			require("copilot").setup({})
-		end,
-	},
-	{
-		"zbirenbaum/copilot-cmp",
-		after = { "copilot.lua" },
-		config = function()
-			require("copilot_cmp").setup()
-		end,
-	},
-	{
-		"VonHeikemen/lsp-zero.nvim",
-		branch = "v2.x",
-		dependencies = {
-			-- LSP Support
-			{ "neovim/nvim-lspconfig" },
-			{ "williamboman/mason.nvim" },
-			{ "williamboman/mason-lspconfig.nvim" },
-
-			-- Autocompletion
-			{ "hrsh7th/nvim-cmp" },
-			{ "hrsh7th/cmp-buffer" },
-			{ "hrsh7th/cmp-path" },
-			{ "saadparwaiz1/cmp_luasnip" },
-			{ "hrsh7th/cmp-nvim-lsp" },
-			{ "hrsh7th/cmp-nvim-lua" },
-
-			-- Snippets
-			{ "L3MON4D3/LuaSnip" },
-			{ "rafamadriz/friendly-snippets" },
-		},
-	},
-	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
 		keys = {
-			{ "<leader>t", "<cmd>Neotree toggle<cr>", desc = "NeoTree" },
+			{ "<leader>t", "<cmd>Neotree toggle right<cr>", desc = "NeoTree" },
 		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -139,7 +152,7 @@ require("lazy").setup({
 		"folke/trouble.nvim",
 		keys = {
 			{ "<leader>xx", "<cmd>Trouble<cr>", desc = "trouble open" },
-			{ "<leader>xx", "<cmd>TroubleClose<cr>", desc = "trouble close" },
+			{ "<leader>xc", "<cmd>TroubleClose<cr>", desc = "trouble close" },
 			{ "<leader>xw", "<cmd>Trouble workspace_diagnostics<cr>", desc = "trouble workspace" },
 			{ "<leader>xd", "<cmd>Trouble document_diagnostics<cr>", desc = "trouble document" },
 			{ "<leader>xq", "<cmd>Trouble quickfix<cr>", desc = "trouble quickfix" },
@@ -148,27 +161,15 @@ require("lazy").setup({
 		},
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
-	{
-		"jose-elias-alvarez/null-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local null_ls = require("null-ls")
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.diagnostics.eslint,
-				},
-			})
-		end,
-	},
-	{
-		"folke/which-key.nvim",
-		event = "VeryLazy",
-		init = function()
-			vim.o.timeout = true
-			vim.o.timeoutlen = 300
-		end,
-		opts = {},
-	},
+	-- {
+	-- 	"folke/which-key.nvim",
+	-- 	event = "VeryLazy",
+	-- 	init = function()
+	-- 		vim.o.timeout = true
+	-- 		vim.o.timeoutlen = 300
+	-- 	end,
+	-- 	opts = {},
+	-- },
 	{
 		"tpope/vim-fugitive",
 		keys = {
@@ -177,6 +178,7 @@ require("lazy").setup({
 	},
 	"theprimeagen/harpoon",
 	"tpope/vim-surround",
+	"nvim-pack/nvim-spectre",
 	"mhartington/formatter.nvim",
-	"tpope/vim-sleuth",
+	-- "tpope/vim-sleuth",
 })

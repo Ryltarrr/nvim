@@ -1,6 +1,5 @@
 local prettierd = require("formatter.defaults.prettierd")
 local api = vim.api
-
 -- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
 require("formatter").setup({
 	-- Enable or disable logging
@@ -20,6 +19,9 @@ require("formatter").setup({
 			prettierd,
 		},
 		json = {
+			prettierd,
+		},
+		html = {
 			prettierd,
 		},
 		javascript = {
@@ -58,4 +60,16 @@ local formatGroup = api.nvim_create_augroup("FormatAutoGroup", { clear = true })
 api.nvim_create_autocmd("BufWritePost", {
 	command = "FormatWrite",
 	group = formatGroup,
+})
+
+-- Format current buffer using LSP.
+api.nvim_create_autocmd({
+	-- 'BufWritePre' event triggers just before a buffer is written to file.
+	"BufWritePre",
+}, {
+	pattern = { "*.templ" },
+	callback = function()
+		-- Format the current buffer using Neovim's built-in LSP (Language Server Protocol).
+		vim.lsp.buf.format()
+	end,
 })
