@@ -58,7 +58,6 @@ require("lazy").setup({
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
-		-- lazy = false,
 		config = function()
 			local configs = require("nvim-treesitter.configs")
 
@@ -132,7 +131,7 @@ require("lazy").setup({
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
 		keys = {
-			{ "<leader>t", "<cmd>Neotree toggle right<cr>", desc = "NeoTree" },
+			{ "<leader>t", "<cmd>Neotree toggle float reveal<cr>", desc = "NeoTree" },
 		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -181,4 +180,21 @@ require("lazy").setup({
 	"nvim-pack/nvim-spectre",
 	"mhartington/formatter.nvim",
 	-- "tpope/vim-sleuth",
+	{
+		"stevearc/dressing.nvim",
+		opts = {},
+	},
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		opts = {},
+        -- stylua: ignore
+        keys = {
+          { "<return>", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+          { "<s-return>", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+          { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+          { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+          { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+        },
+	},
 })
